@@ -1,29 +1,51 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const apiKeyInput = document.getElementById('apiKey');
+  const apiKeyFileInput = document.getElementById('apiKeyFile');
   const saveApiKeyBtn = document.getElementById('saveApiKey');
   const summarizeBtn = document.getElementById('summarizeBtn');
   const summaryContainer = document.getElementById('summaryContainer');
   const apiKeyContainer = document.getElementById('apiKeyContainer');
   const summaryEl = document.getElementById('summary');
   const loader = document.getElementById('loader');
+  let apiKey = null;
   
-  // Check if API key is already saved
-  chrome.storage.local.get(['claudeApiKey'], function(result) {
-    if (result.claudeApiKey) {
-      apiKeyInput.value = result.claudeApiKey;
+  // Check if API key file has been uploaded previously
+  chrome.storage.local.get(['hasApiKeyFile'], function(result) {
+    if (result.hasApiKeyFile) {
       apiKeyContainer.classList.add('hidden');
       summaryContainer.classList.remove('hidden');
     }
   });
   
-  // Save API key
+  // Save API key from file
+  apiKeyFileInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        apiKey = e.target.result.trim();
+        console.log("API key loaded");
+        document.getElementById('fileStatus').textContent = 'File loaded';
+      } catch (error) {
+        document.getElementById('fileStatus').textContent = 'Invalid file format';
+        console.error('Error reading file:', error);
+      }
+    };
+    reader.readAsText(file);
+  });
+  
+  // Save API key file status
   saveApiKeyBtn.addEventListener('click', function() {
-    const apiKey = apiKeyInput.value.trim();
     if (apiKey) {
-      chrome.storage.local.set({claudeApiKey: apiKey}, function() {
+      chrome.storage.local.set({hasApiKeyFile: true}, function() {
+        console.log("API key file status saved");
         apiKeyContainer.classList.add('hidden');
         summaryContainer.classList.remove('hidden');
       });
+      // Store the actual key in memory only, not in storage
+    } else {
+      document.getElementById('fileStatus').textContent = 'Please select a valid API key file first';
     }
   });
   
@@ -43,24 +65,26 @@ document.addEventListener('DOMContentLoaded', function() {
     loader.classList.remove('hidden');
     summaryEl.innerHTML = '';
     
-    // Get API key
-    chrome.storage.local.get(['claudeApiKey'], function(result) {
-      if (!result.claudeApiKey) {
-        summaryEl.innerHTML = "Please save your Claude API key first";
-        loader.classList.add('hidden');
-        return;
-      }
-      
-      // Get active tab content
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {action: "getPageContent"}, function(response) {
-          if (response && response.content) {
-            getClaudeSummary(response.content, result.claudeApiKey, tabs[0].url);
-          } else {
-            summaryEl.innerHTML = "Could not retrieve page content";
-            loader.classList.add('hidden');
-          }
-        });
+    // Check if we have the API key in memory
+    if (!apiKey) {
+      summaryEl.innerHTML = "Please upload your Claude API key file first";
+      loader.classList.add('hidden');
+      apiKeyContainer.classList.remove('hidden');
+      summaryContainer.classList.add('hidden');
+      return;
+    }
+    
+    // Get active tab content
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {action: "getPageContent"}, function(response) {
+        if (response && response.content) {
+          console.log("Page content received:", response.content);
+          getClaudeSummary(response.content, apiKey, tabs[0].url);
+        } else {
+          summaryEl.innerHTML = "Could not retrieve page content";
+          loader.classList.add('hidden');
+          console.error("Error retrieving page content:", chrome.runtime.lastError);
+        }
       });
     });
   }
@@ -71,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
+        'anthropic-dangerous-direct-browser-access': 'true',
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01'
