@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Page Summarizer with Claude",
+    "name": "SummAI",
     "version": "1.0",
     "description": "Summarizes web pages using Claude API",
     "permissions": ["activeTab", "storage", "scripting"],
@@ -28,6 +28,12 @@
         {
             "matches": ["<all_urls>"],
             "js": ["content.js"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["config.js"],
+            "matches": ["<all_urls>"]
         }
     ]
 }

@@ -8,8 +8,12 @@
       padding: 10px;
       font-family: Arial, sans-serif;
     }
-    #apiKeyContainer {
+    #configErrorContainer {
       margin-bottom: 15px;
+      color: #d32f2f;
+      background-color: #ffebee;
+      padding: 10px;
+      border-radius: 4px;
     }
     #summary {
       white-space: pre-wrap;
@@ -32,40 +36,27 @@
     button:hover {
       background-color: #3367d6;
     }
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      box-sizing: border-box;
-    }
     #loader {
       text-align: center;
       margin-top: 20px;
-    }
-    #fileStatus {
-      margin-top: 8px;
-      font-size: 0.9em;
-      color: #555;
     }
   </style>
 </head>
 <body>
   <h2>Page Summarizer</h2>
   
-  <div id="apiKeyContainer">
-    <h3>Claude API Key</h3>
-    <p>Please select the file containing your Claude API key:</p>
-    <input type="file" id="apiKeyFile" accept=".txt">
-    <p id="fileStatus"></p>
-    <button id="saveApiKey">Save API Key</button>
+  <div id="configErrorContainer" class="hidden">
+    <h3>Configuration Error</h3>
+    <p id="configErrorMessage">Could not load API key. Please check your configuration file.</p>
   </div>
   
-  <div id="summaryContainer" class="hidden">
+  <div id="summaryContainer">
     <button id="summarizeBtn">Summarize This Page</button>
     <div id="loader" class="hidden">Summarizing...</div>
     <div id="summary"></div>
   </div>
   
+  <script src="config.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
