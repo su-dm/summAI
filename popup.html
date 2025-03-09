@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Page Summarizer</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+    #apiKeyContainer {
+      margin-bottom: 15px;
+    }
+    #summary {
+      white-space: pre-wrap;
+      margin-top: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #3367d6;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    #loader {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Page Summarizer</h2>
+  
+  <div id="apiKeyContainer">
+    <label for="apiKey">Claude API Key:</label>
+    <input type="password" id="apiKey" placeholder="Enter your Claude API key">
+    <button id="saveApiKey">Save API Key</button>
+  </div>
+  
+  <div id="summaryContainer" class="hidden">
+    <button id="summarizeBtn">Summarize This Page</button>
+    <div id="loader" class="hidden">Summarizing...</div>
+    <div id="summary"></div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
