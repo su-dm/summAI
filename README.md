@@ -24,3 +24,10 @@ Before using the extension, you need to configure your Claude API key:
 1. Open the `config.js` file in the extension directory
 2. Replace `'YOUR_CLAUDE_API_KEY'` with your actual Claude API key
 3. Save the file and reload the extension in Chrome
+
+## Credit
+
+Icon / favicon is not mine.
+
+Thank you Parzival' 1997.
+https://www.flaticon.com/free-icon/creative_12122387?term=generator&page=1&position=2&origin=tag&related_id=12122387
