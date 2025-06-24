@@ -44,19 +44,20 @@
 </head>
 <body>
   <h2>Page Summarizer</h2>
-  
+
   <div id="configErrorContainer" class="hidden">
     <h3>Configuration Error</h3>
     <p id="configErrorMessage">Could not load API key. Please check your configuration file.</p>
   </div>
-  
+
   <div id="summaryContainer">
     <button id="summarizeBtn">Summarize This Page</button>
     <div id="loader" class="hidden">Summarizing...</div>
     <div id="summary"></div>
   </div>
-  
+
   <script src="config.js"></script>
+  <script src="shared-utils.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
