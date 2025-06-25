@@ -4,7 +4,7 @@ A Chrome extension that summarizes web pages using Claude API.
 
 Just press CMD+SHIFT+S.
 
-You can also summarize highlighted text within the context of the page. Highlight text, right click, "AI Summary".
+You can also summarize highlighted text within the context of the page. Highlight text, right click, "Summarize Phrase".
 
 ## WARNING
 
